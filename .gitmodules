@@ -1,0 +1,6 @@
+[submodule "vue-cli-test"]
+	path = vue-cli-test
+	url = ./vue-cli-test
+[submodule "vue-with-spring-test"]
+	path = vue-with-spring-test
+	url = ./vue-with-spring-test
