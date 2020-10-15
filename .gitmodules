@@ -1,6 +1,6 @@
 [submodule "vue-cli-test"]
 	path = vue-cli-test
-	url = ./vue-cli-test
+url=https://github.com/inqbs/vue-cli-test.git
 [submodule "vue-with-spring-test"]
 	path = vue-with-spring-test
-	url = ./vue-with-spring-test
+url=https://github.com/inqbs/vue-with-spring-test.git
