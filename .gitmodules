@@ -6,4 +6,4 @@ url=https://github.com/inqbs/vue-cli-test.git
 url=https://github.com/inqbs/vue-with-spring-test.git
 [submodule "vue-mpa-test"]
 	path = vue-mpa-test
-url=https://github.com/inqbs/vue-mpa-test.git
+	url = https://github.com/inqbs/vue-mpa-test.git
