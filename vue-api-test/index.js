@@ -44,16 +44,40 @@ app.get('/', (req, res) => {
     res.send('hello world')
 })
 
-app.get('/list', (req, res) => {
+app.get('/list', async (req, res) => {
+
+    const isPagingRequired = !!req.query.perPage
+    let size = 0;
+
+    //  count
+    await conn.query(
+        'SELECT count(*) as cnt FROM board',
+        (err, result) => {
+            size = result[0].cnt
+        }
+    );
+
+    const getPagingLimit = ()=>{
+        if(!isPagingRequired) return '';
+
+        const page = req.query.page
+        const perPage = req.query.perPage
+
+        let fromIndex = (page - 1) * perPage
+
+        return `LIMIT ${fromIndex}, ${perPage}`
+    }
+    
     conn.query(
         'SELECT * FROM board '+
-        'ORDER BY regdate DESC',
+        'ORDER BY regdate DESC '+
+        getPagingLimit(),
         (err, result) => {
             res.status(200)
                 .send(defaultErrorHandler(err,
                     json => {
                         json.list = result
-                        json.size = result.length
+                        json.size = size
                     }, json => {
                         json.err = err
                     }))
