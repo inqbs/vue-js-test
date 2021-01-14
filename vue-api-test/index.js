@@ -21,7 +21,6 @@ conn.connect();
 /* mysql config END */
 
 const defaultErrorHandler = (err, onSuccess, onFailure) => {
-    
     const json = new JsonResultModel(!err);
     if (!!err) {
         console.error(err)
@@ -57,8 +56,8 @@ app.get('/list', async (req, res) => {
         }
     );
 
-    const getPagingLimit = ()=>{
-        if(!isPagingRequired) return '';
+    const getPagingLimit = () => {
+        if (!isPagingRequired) return '';
 
         const page = req.query.page
         const perPage = req.query.perPage
@@ -67,10 +66,10 @@ app.get('/list', async (req, res) => {
 
         return `LIMIT ${fromIndex}, ${perPage}`
     }
-    
+
     conn.query(
-        'SELECT * FROM board '+
-        'ORDER BY regdate DESC '+
+        'SELECT * FROM board ' +
+        'ORDER BY regdate DESC ' +
         getPagingLimit(),
         (err, result) => {
             res.status(200)
@@ -87,8 +86,8 @@ app.get('/list', async (req, res) => {
 
 app.post('/create', (req, res) => {
     conn.query(
-        'INSERT INTO board(title, description, author, password) '+
-        'VALUES(?, ?, ?, ?)' ,
+        'INSERT INTO board(title, description, author, password) ' +
+        'VALUES(?, ?, ?, ?)',
         [req.body.title, req.body.description, req.body.author, req.body.password],
         (err, result) => {
             res.send(defaultErrorHandler(err))
@@ -96,7 +95,7 @@ app.post('/create', (req, res) => {
     )
 })
 
-app.post('/update/:idx', (req, res) => {
+app.post('/update', (req, res) => {
     conn.query(
         'UPDATE board SET title = ?, description = ? WHERE idx = ? and password = ?',
         [req.body.title, req.body.description, req.body.idx, req.body.password],
@@ -106,14 +105,37 @@ app.post('/update/:idx', (req, res) => {
     )
 })
 
-app.post('/delete/:id', (req, res) => {
+app.post('/delete', async (req, res) => {
+
+    const idx = req.body.idx;
+    const password = req.body.password
+
+    console.log(`${idx} : ${password}`)
+
     conn.query(
-        'DELETE FROM board WHERE idx = ? and password = ?',
-        [req.body.idx, req.body.password],
+        'SELECT count(*) as cnt FROM board WHERE idx = ? and password = ?',
+        [idx, password],
         (err, result) => {
-            res.send(defaultErrorHandler(err))
+            const isCurrect = !!result[0].cnt == 1
+
+            console.log(isCurrect)
+
+            if (!isCurrect) {
+                res.send(defaultErrorHandler(true, null, json => {
+                    json.msg = '잘못된 비밀번호 입니다.'
+                }))
+            } else {
+                conn.query(
+                    'DELETE FROM board WHERE idx = ? and password = ?',
+                    [idx, password],
+                    (err, result) => {
+                        res.send(defaultErrorHandler(err))
+                    }
+                )
+            }
         }
-    )
+    );
+
 })
 
 /* controller end */
