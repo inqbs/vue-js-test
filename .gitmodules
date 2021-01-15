@@ -7,3 +7,6 @@ url=https://github.com/inqbs/vue-with-spring-test.git
 [submodule "vue-mpa-test"]
 	path = vue-mpa-test
 url = https://github.com/inqbs/vue-mpa-test.git
+[submodule "vue-nuxt-test"]
+	path = vue-nuxt-test
+	url = https://github.com/inqbs/vue-nuxt-test.git
